@@ -1,0 +1,8 @@
+.DS_STORE
+config.make
+addons.make
+Makefile
+Project.xcconfig
+*.xcodeproj/
+openFrameworks-Info.plist
+bin/
