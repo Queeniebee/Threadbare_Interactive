@@ -46,7 +46,8 @@ void ofApp::setup(){
     fbo.begin();
     ofClear(0,0,0,255);
     fbo.end();
-
+    
+    mainOutputSyphonServer.setName("Screen Output");
     
     cout<<endTime<<endl;
     serial.setup(0, 115200);
@@ -95,6 +96,7 @@ void ofApp::draw(){
     fbo.end();
     
     fbo.draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
+    mainOutputSyphonServer.publishScreen();
 }
 
 //--------------------------------------------------------------
@@ -125,7 +127,7 @@ int ofApp::selectVideo(int sensorValue){
 //    int currentVideoIndex  = ofMap(sensorValue, sensorMin, sensorMax, videoIndexMin, videoIndexMax,true);
     int currentVideoIndex;
     
-    if((sensorValue >= 0)&&(sensorValue < 23)){
+    if((sensorValue >= 1)&&(sensorValue < 23)){
         currentVideoIndex = 0;
     }else if ((sensorValue >= 23) && (sensorValue < 56)){
         currentVideoIndex = 1;

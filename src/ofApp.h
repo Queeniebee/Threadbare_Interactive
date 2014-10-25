@@ -8,6 +8,7 @@
 //#include "GLFW/glfw3native.h"
 #include "ofQTKitPlayer.h"
 #include <iostream>
+#include "ofxSyphon.h"
 
 using namespace std;
 
@@ -49,6 +50,9 @@ class ofApp : public ofBaseApp{
     void serialEvent();
     int sensors();
     void timerSwitch();
+    
+    ofxSyphonServer mainOutputSyphonServer;
+    ofxSyphonServer individualTextureSyphonServer;
     
 		
 };
