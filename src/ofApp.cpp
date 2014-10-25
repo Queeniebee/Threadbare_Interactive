@@ -48,6 +48,11 @@ void ofApp::setup(){
     ofClear(0,0,0,255);
     fbo.end();
     
+    maskFbo.allocate(ofGetWindowWidth(), ofGetWindowHeight());
+    maskFbo.begin();
+    ofClear(0, 0, 0, 255);
+    maskFbo.end();
+    
     mainOutputSyphonServer.setName("Screen Output");
     
     cout<<endTime<<endl;
@@ -92,6 +97,13 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    maskFbo.begin();
+    shader.begin();
+    shader.setUniform1f("alphaValue", alphaValue);
+    ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    shader.end();
+    maskFbo.end();
+    
     fbo.begin();
     ofClear(0, 0, 0, 0);
     shader.begin();
@@ -100,7 +112,9 @@ void ofApp::draw(){
     clipsPointer->draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
     fbo.end();
     
+    maskFbo.draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
     fbo.draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
+
     mainOutputSyphonServer.publishScreen();
 }
 
