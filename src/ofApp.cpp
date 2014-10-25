@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+    shader.load("shader.vert", "shader.frag");
     ofSetVerticalSync(true);
     bTimerReached = false;
     
@@ -90,8 +91,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
     fbo.begin();
     ofClear(0, 0, 0, 0);
+    shader.begin();
+    shader.setUniform1f("alphaValue", alphaValue);
+    shader.end();
     clipsPointer->draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
     fbo.end();
     
@@ -162,37 +167,45 @@ int ofApp::sensors(){
     int secondSensor;
     
     int selectedSensor;
-
-/*    if(fromSerialPort[0] == 1){
-        firstSensor = fromSerialPort[1];
-        prevFirst = firstSensor;
-        cout<<firstSensor<<endl;
-    }else if (fromSerialPort[0] == 0){
-        firstSensor = 390;
-        prevFirst = firstSensor;
-
-    }
-    if(fromSerialPort[2] == 2){
-        secondSensor = fromSerialPort[3];
-        prevSecond = secondSensor;
-        cout<<secondSensor<<endl;
-
-    } else if(fromSerialPort[2] == 0){
-        secondSensor = 400;
-        prevSecond = secondSensor;
-    } */
     
     if((fromSerialPort[0] == 1) && (fromSerialPort[2] == 2)){
         firstSensor = fromSerialPort[1];
         secondSensor = fromSerialPort[3];
-
+        
         prevFirst = firstSensor;
         prevSecond = secondSensor;
+        
+        if((secondSensor >= 1)&&(secondSensor < 23)){
+            alphaValue = 0.08;
+        }else if ((secondSensor >= 23) && (secondSensor < 56)){
+            alphaValue = 0.16;
+        }else if ((secondSensor >= 56) && (secondSensor < 89)){
+            alphaValue = 0.24;
+        }else if ((secondSensor >= 89) && (secondSensor < 122)){
+            alphaValue = 0.32;
+        }else if ((secondSensor >= 122) && (secondSensor < 155)){
+            alphaValue = 0.40;
+        }else if ((secondSensor >= 155) && (secondSensor < 188)){
+            alphaValue = 0.48;
+        }else if ((secondSensor >= 188) && (secondSensor < 221)){
+            alphaValue = 0.56;
+        }else if ((secondSensor >= 221) && (secondSensor < 281)){
+            alphaValue = 0.64;
+        }else if ((secondSensor >= 281) && (secondSensor < 320)){
+            alphaValue = 0.72;
+        }else if ((secondSensor >= 320) && (secondSensor < 343)){
+            alphaValue = 0.80;
+        }else if ((secondSensor >= 343) && (secondSensor < 383)){
+            alphaValue = 0.88;
+        }else {
+            alphaValue = 1.0;
+        }
         selectedSensor = MAX(firstSensor, secondSensor);
-
+        
     }else if (fromSerialPort[0] == 0){
         selectedSensor = MAX(prevFirst, prevSecond);
     }
+    
         return (selectedSensor);
     cout<<"Selected: "<<selectedSensor<<endl;
 
