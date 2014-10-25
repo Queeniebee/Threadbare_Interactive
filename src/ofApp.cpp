@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+ 
+    shader.load("shader.vert", "shader.frag");
     ofSetVerticalSync(true);
     bTimerReached = false;
     
@@ -47,6 +48,7 @@ void ofApp::setup(){
     ofClear(0,0,0,255);
     fbo.end();
     
+//    maskFbo.allocate
     mainOutputSyphonServer.setName("Screen Output");
     
     cout<<endTime<<endl;

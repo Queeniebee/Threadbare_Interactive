@@ -29,6 +29,7 @@ class ofApp : public ofBaseApp{
     ofQTKitDecodeMode decodeMode;
     ofQTKitPlayer videos[NUM_CLIPS];
     ofFbo fbo, maskFbo;
+    ofShader shader;
     
     unsigned char bytesReturned[NUM_BYTES];
     unsigned char message[NUM_BYTES];
@@ -43,6 +44,7 @@ class ofApp : public ofBaseApp{
 //    int firstSensor, secondSensor;
     
     int prevFirst, prevSecond;
+    float alphaValue;
     
     int prevSensorReading = 0;
 
