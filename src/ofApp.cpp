@@ -2,8 +2,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
- 
-    shader.load("shader.vert", "shader.frag");
     ofSetVerticalSync(true);
     bTimerReached = false;
     
@@ -11,6 +9,8 @@ void ofApp::setup(){
     cout<<startTime<<endl;
 //    endTime = (int)1500;
     endTime = (int)1800;
+    cout<<endTime<<endl;
+    serial.setup(0, 115200);
     
     paths[0] = "THREADBARE_hair.mov";
     paths[1] = "THREADBARE_shoes4.mov";
@@ -24,7 +24,6 @@ void ofApp::setup(){
     paths[9] = "THREADBARE_v4/THREADBARE_v4.mov";
     paths[10] = "THREABARE_v2/THREABARE_v2.mov";
     paths[11] = "THREADBARE_curtain.mov";
-    
     
     clipsPointer = &videos[0];
     clipsPointer->setPixelFormat(OF_PIXELS_RGBA);
@@ -43,17 +42,20 @@ void ofApp::setup(){
     videoSound.setLoop(true);
     videoSound.play();
     
+    maskFbo.allocate(ofGetWindowWidth(), ofGetWindowHeight());
+    maskFbo.begin();
+    ofClear(0,0,0,255);
+    maskFbo.end();
+    
     fbo.allocate(ofGetWindowWidth(), ofGetWindowHeight());
     fbo.begin();
     ofClear(0,0,0,255);
     fbo.end();
     
-//    maskFbo.allocate
     mainOutputSyphonServer.setName("Screen Output");
-    
-    cout<<endTime<<endl;
-    serial.setup(0, 115200);
-    
+    shader.load("shader.vert", "shader.frag");
+    shader2.load("shader2.vert", "shader.frag");
+
 }
 
 //--------------------------------------------------------------
@@ -92,12 +94,22 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    maskFbo.begin();
+    shader.begin();
+    shader.setUniform1f("alphaValue", alphaValue);
+    ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    shader.end();
+    maskFbo.end();
+    
     fbo.begin();
     ofClear(0, 0, 0, 0);
     clipsPointer->draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
+    maskFbo.draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
     fbo.end();
     
     fbo.draw(0,0, ofGetWindowWidth(), ofGetWindowHeight());
+
     mainOutputSyphonServer.publishScreen();
 }
 
@@ -187,6 +199,7 @@ int ofApp::sensors(){
     if((fromSerialPort[0] == 1) && (fromSerialPort[2] == 2)){
         firstSensor = fromSerialPort[1];
         secondSensor = fromSerialPort[3];
+        alphaValue = ofMap(secondSensor, 0, 400, 0, 1, true);
 
         prevFirst = firstSensor;
         prevSecond = secondSensor;

@@ -29,7 +29,7 @@ class ofApp : public ofBaseApp{
     ofQTKitDecodeMode decodeMode;
     ofQTKitPlayer videos[NUM_CLIPS];
     ofFbo fbo, maskFbo;
-    ofShader shader;
+    ofShader shader, shader2;
     
     unsigned char bytesReturned[NUM_BYTES];
     unsigned char message[NUM_BYTES];
